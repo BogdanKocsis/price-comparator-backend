@@ -31,7 +31,7 @@ public class PriceHistoryService {
             point.setStore(product.getStore());
             point.setDate(product.getDate());
             point.setPrice(product.getPrice());
-            point.setDiscount(discountPercent != 0 ? discountPercent : 0);
+            point.setDiscount(discountPercent);
             point.setDiscountedPrice(discountPercent != 0 ? Math.round((product.getPrice() - (product.getPrice() * discountPercent / 100)) * 100.0) / 100.0 : product.getPrice());
             history.add(point);
         }

@@ -11,7 +11,6 @@ public class ProductRecommendation {
     private double valuePerUnit;
     private boolean discounted;
 
-    // Getters & Setters
     public String getProductId() {
         return productId;
     }

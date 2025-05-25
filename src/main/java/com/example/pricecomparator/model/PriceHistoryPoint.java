@@ -11,7 +11,6 @@ public class PriceHistoryPoint {
     private double discount;
     private double discountedPrice;
 
-    // Getters & Setters
     public String getProductId() {
         return productId;
     }

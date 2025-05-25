@@ -18,8 +18,6 @@ import java.util.stream.Collectors;
 public class CsvDataRepository {
 
     private final CsvParserService csvParserService;
-    List<Product> allProducts = new ArrayList<>();
-    List<DiscountProduct> allDiscountProducts = new ArrayList<>();
     private final List<String> stores = List.of("lidl", "profi", "kaufland");
 
     public CsvDataRepository(CsvParserService csvParserService) {
@@ -41,7 +39,7 @@ public class CsvDataRepository {
     }
 
     public List<Product> findByProductName(String productName) throws IOException {
-        allProducts = loadAllOverProducts();
+        List<Product> allProducts = loadAllOverProducts();
         return allProducts.stream()
                 .filter(p -> p.getProductName().equalsIgnoreCase(productName))
                 .collect(Collectors.toList());
@@ -63,6 +61,7 @@ public class CsvDataRepository {
     }
 
     public List<Product> loadAllOverProducts() throws IOException {
+        List<Product> allProducts = new ArrayList<>();
         Map<String, List<String>> storeToFiles = Map.of(
                 "lidl", List.of("src/data/lidl_2025-05-01.csv", "src/data/lidl_2025-05-08.csv"),
                 "profi", List.of("src/data/profi_2025-05-01.csv", "src/data/profi_2025-05-08.csv"),
@@ -80,6 +79,7 @@ public class CsvDataRepository {
     }
 
     public List<DiscountProduct> loadAllOverDiscounts() throws IOException {
+        List<DiscountProduct> allDiscountProducts = new ArrayList<>();
         List<String> discountFiles = List.of(
                 "src/data/lidl_discounts_2025-05-01.csv",
                 "src/data/lidl_discounts_2025-05-08.csv",
@@ -89,9 +89,9 @@ public class CsvDataRepository {
                 "src/data/kaufland_discounts_2025-05-08.csv"
         );
 
-        for (int i = 0; i < stores.size(); i++) {
-            for (int j = 0; j < discountFiles.size(); j++)
-                allDiscountProducts.addAll(csvParserService.parseDiscounts(discountFiles.get(j), stores.get(i)));
+        for (String store : stores) {
+            for (String discountFile : discountFiles)
+                allDiscountProducts.addAll(csvParserService.parseDiscounts(discountFile, store));
         }
         return allDiscountProducts;
     }
@@ -117,7 +117,7 @@ public class CsvDataRepository {
     }
 
     private LocalDate extractDateFromFilename(String filename) {
-        // Exemplu: profi_2025-05-01.csv => 2025-05-01
+        // Example: profi_2025-05-01.csv => 2025-05-01
         String dateStr = filename.replaceAll(".*_(\\d{4}-\\d{2}-\\d{2})\\.csv", "$1");
         return LocalDate.parse(dateStr);
     }
